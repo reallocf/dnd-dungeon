@@ -4,6 +4,7 @@ from os import environ
 import psycopg2
 import sys
 from random import randint
+import datetime
 
 api = twitter.Api(consumer_key=environ.get('TWIT_CON_KEY'),
                   consumer_secret=environ.get('TWIT_CON_SEC'),
@@ -25,4 +26,11 @@ count = cur.fetchall()
 exclamation = ["Huzzah", "Hurrah", "Wooooo", "Avast", "Tally-ho", "Rah rah", "Yippee", "BOOM", "Va-va-voom", "Holy moly", "ROFL"]
 taken = ["pilfered", "filched", "purloined", "misappropriated", "burglarized", "pillaged", "pinched", "swindled", "liberated", "defrauded", "lifted"]
 
-status = api.PostUpdate(exclamation[randint(0,10)] + '! We\'ve ' + taken[randint(0,10)] + ' metadata from ' + str(int(count[0][0])) + ' websites so far!')
+#status = api.PostUpdate(exclamation[randint(0,10)] + '! We\'ve ' + taken[randint(0,10)] + ' metadata from ' + str(int(count[0][0])) + ' websites so far!')
+
+#server's local time is 8 hours ahead for whatever reason :(
+our_time = datetime.datetime.now() - datetime.timedelta(hours=8)
+
+csv = open("shout_volume.csv", 'a')
+csv.write(str(int(count[0][0])) + ", " + str(our_time) + "\n")
+csv.close()
